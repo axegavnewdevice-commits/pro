@@ -1,0 +1,11 @@
+Arabic Scrabble PWA fix — GitHub overlay
+
+1. Extract this ZIP.
+2. Upload the extracted files/folders to the ROOT of your existing GitHub repository, overwriting files with the same paths. Do not upload only the ZIP file.
+3. Commit and push; let Vercel redeploy.
+4. On Android, remove the old home-screen icon/PWA, open the deployed HTTPS site in Chrome, then Chrome menu (⋮) > Install app. Choose “Install app” rather than merely creating a home-screen shortcut if both choices appear.
+5. On iPhone/iPad, open the HTTPS site in Safari, tap Share, then Add to Home Screen. Remove and re-add the old icon so the new icon/metadata are picked up.
+
+The icon, manifest, service worker cache version, and Vercel cache headers are updated. The game's on-page display and game logic are not changed.
+
+Important: a PWA still uses the browser engine underneath. In standalone mode it should open without Chrome's normal address bar/tab UI. If you select a browser shortcut instead of installing the PWA, it will continue opening in Chrome.

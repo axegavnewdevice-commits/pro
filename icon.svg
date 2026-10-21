@@ -1,5 +1,18 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="96" fill="#4a2f26"/>
-  <rect x="76" y="76" width="360" height="360" rx="34" fill="#f5e6b9" stroke="#7d4e32" stroke-width="16"/>
-  <text x="256" y="295" text-anchor="middle" dominant-baseline="middle" font-family="Amiri, serif" font-size="258" font-weight="700" fill="#006400">ع</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="wood" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#5b2d16"/><stop offset=".5" stop-color="#2a1008"/><stop offset="1" stop-color="#130803"/></linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff0a0"/><stop offset=".45" stop-color="#d99a22"/><stop offset="1" stop-color="#80500b"/></linearGradient>
+    <linearGradient id="tile" x1="0" y1="0" x2="0.8" y2="1"><stop stop-color="#fff8dd"/><stop offset="1" stop-color="#e9c978"/></linearGradient>
+    <linearGradient id="green" x1="0" y1="0" x2="0.8" y2="1"><stop stop-color="#17633c"/><stop offset="1" stop-color="#00351f"/></linearGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur in="SourceAlpha" stdDeviation="10"/><feOffset dy="10"/><feComponentTransfer><feFuncA type="linear" slope=".55"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="512" height="512" rx="92" fill="url(#wood)"/>
+  <rect x="15" y="15" width="482" height="482" rx="78" fill="none" stroke="url(#gold)" stroke-width="12"/>
+  <path d="M256 50 302 105 377 105 377 180 433 256 377 332 377 407 302 407 256 462 210 407 135 407 135 332 79 256 135 180 135 105 210 105Z" fill="url(#green)" stroke="url(#gold)" stroke-width="5" opacity=".93"/>
+  <g transform="rotate(-7 256 256)" filter="url(#shadow)">
+    <rect x="105" y="102" width="302" height="310" rx="34" fill="#986316" stroke="url(#gold)" stroke-width="8"/>
+    <rect x="111" y="98" width="290" height="296" rx="31" fill="url(#tile)" stroke="#fff0b6" stroke-width="5"/>
+    <text x="256" y="302" text-anchor="middle" font-family="Amiri, Traditional Arabic, Noto Naskh Arabic, serif" font-size="215" font-weight="700" fill="url(#green)" stroke="#c58a20" stroke-width="2" direction="rtl">س</text>
+    <text x="359" y="360" text-anchor="middle" font-family="Georgia, serif" font-size="39" font-weight="700" fill="#064326">1</text>
+  </g>
 </svg>

@@ -1,14 +1,15 @@
-const CACHE_VERSION = 'arabic-scrabble-pwa-v1';
+const CACHE_VERSION = 'arabic-scrabble-pwa-v2';
 const APP_CACHE = `${CACHE_VERSION}-app`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 const APP_SHELL = [
-  './',
-  './index.html',
-  './manifest.webmanifest',
-  './icons/icon.svg',
-  './icons/icon-180.png',
-  './icons/icon-192.png',
-  './icons/icon-512.png'
+  '/',
+  '/index.html',
+  '/manifest.webmanifest',
+  '/icons/icon.svg',
+  '/icons/icon-180.png',
+  '/icons/icon-192.png',
+  '/icons/icon-512.png',
+  '/icons/icon-512-maskable.png'
 ];
 const EXTERNAL_BOOTSTRAP = 'https://cdn.tailwindcss.com';
 
@@ -17,8 +18,8 @@ self.addEventListener('install', (event) => {
     const cache = await caches.open(APP_CACHE);
     await cache.addAll(APP_SHELL);
 
-    // Tailwind is loaded from a CDN by the original game HTML. Store its
-    // opaque classic-script response so styles can still initialize offline.
+    // The original game loads Tailwind from a CDN; cache its opaque response
+    // where the browser permits it, so the interface can initialize offline.
     try {
       const response = await fetch(EXTERNAL_BOOTSTRAP, { mode: 'no-cors', cache: 'reload' });
       if (response && (response.type === 'opaque' || response.ok)) {
@@ -26,7 +27,7 @@ self.addEventListener('install', (event) => {
         await runtime.put(EXTERNAL_BOOTSTRAP, response.clone());
       }
     } catch (_) {
-      // The PWA can still install; a network visit can fill the runtime cache.
+      // Installation remains valid if the CDN is temporarily unreachable.
     }
     await self.skipWaiting();
   })());
@@ -49,19 +50,19 @@ self.addEventListener('fetch', (event) => {
   const isSameOrigin = requestUrl.origin === self.location.origin;
 
   if (isSameOrigin && request.mode === 'navigate') {
-    // Prefer the latest deployed HTML; show the cached game if offline.
     event.respondWith((async () => {
       try {
         const response = await fetch(request);
         if (response && response.ok) {
           const cache = await caches.open(APP_CACHE);
-          await cache.put('./index.html', response.clone()).catch(() => {});
+          await cache.put('/index.html', response.clone()).catch(() => {});
+          if (requestUrl.pathname === '/') await cache.put('/', response.clone()).catch(() => {});
         }
         return response;
       } catch (_) {
         return (await caches.match(request)) ||
-          (await caches.match('./index.html')) ||
-          (await caches.match('./'));
+          (await caches.match('/index.html')) ||
+          (await caches.match('/'));
       }
     })());
     return;
@@ -71,7 +72,6 @@ self.addEventListener('fetch', (event) => {
     event.respondWith((async () => {
       const cached = await caches.match(request);
       if (cached) {
-        // Update in the background for future visits.
         fetch(request).then(async (response) => {
           if (response && response.ok) {
             const cache = await caches.open(APP_CACHE);
@@ -94,19 +94,19 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // CDN code and fonts are cached after a successful load and reused offline.
+  // Cache cross-origin scripts/fonts after a successful fetch, then reuse them offline.
   event.respondWith((async () => {
     try {
       const response = await fetch(request);
       if (response && (response.ok || response.type === 'opaque')) {
         const cache = await caches.open(RUNTIME_CACHE);
-        await cache.put(request, response.clone());
+        await cache.put(request, response.clone()).catch(() => {});
       }
       return response;
     } catch (_) {
       const cached = await caches.match(request);
       if (cached) return cached;
-      throw _;
+      return new Response('', { status: 503, statusText: 'Offline' });
     }
   })());
 });
